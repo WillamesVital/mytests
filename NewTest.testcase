@@ -1,0 +1,102 @@
+@component-name = "portal-web-forms-and-data-lists"
+definition {
+    property testray.main.component.name = "Forms";
+
+    setUp {
+        TestCase.setUpPortalInstance();
+
+        User.firstLoginPG();
+
+        Navigator.openURL();
+    }
+
+    tearDown {
+        User.logoutAndLoginPG(
+            userLoginEmailAddress = "test@liferay.com",
+            userLoginFullName = "Test Test");
+    }
+
+    @description = "Create a Form to Register the user Name and Age"
+    @priority = "5"
+    test CreateFormRegisterNameAge {
+    
+    FormsAdmin.addForm(); //cria um novo formulario
+       
+    Form.editName(formTitle = "My Forms");//edita o nome do formulario
+
+    Form.gotoAddField(fieldType = "Numeric");
+    Form.editFieldLabelMetal(fieldValue = "Age");
+       
+    Form.closeSidebar();
+
+    Form.gotoAddField(fieldType = "Text");
+    Form.editFieldLabelMetal(fieldValue = "Full Name");
+
+    Form.addTranslation(localizedLanguage = "Portuguese (Brazil)");//adicionar um formulario em pt-br
+       
+    Form.editName(formTitle = "Meu Formulario");
+
+    FormViewBuilder.editFieldLabel(
+        fieldLabel = "Age",
+        label = "Idade");
+
+    FormViewBuilder.editFieldLabel(
+        fieldLabel = "Full Name",
+        label = "Nome Completo");
+    
+    Form.save();//salva formulario
+
+    Form.publishForm();//publica formulario
+
+    FormsAdminNavigator.gotoPublishedForm();//vai para a publicacao
+
+    FormFields.editText(
+        fieldLabel = "Text",
+        fieldName = "Text",
+        fieldValue = "Willames Vital"); 
+   
+    FormFields.editText(
+        fieldLabel = "Numeric",
+        fieldName = "Numeric",
+        fieldValue = "28");
+
+    FormPortlet.submitSuccessfully();
+
+    Form.submitAgain();
+
+    FormPortletConfiguration.changeLanguage(
+        currentLanguage = "en-US",
+        newLanguage = "português-Brasil");
+
+    FormFields.editText(
+        fieldLabel = "Text",
+        fieldName = "Text",
+        fieldValue = "Willames Ferreira");
+
+    FormFields.editText(
+        fieldLabel = "Numeric",
+        fieldName = "Numeric",
+        fieldValue = "32");
+
+    FormPortlet.submitSuccessfully();
+
+    FormsAdminNavigator.closePublishedFormWindow();
+
+    FormsAdminNavigator.gotoViewEntries();//ir para o formulario e ver as entradas
+    
+    AssertElementPresent(
+			key_rowAny = "Willames Vital",
+			key_rowEntry = "28",
+            key_text = "en-us",
+			locator1 = "Icon#ANY_FORM");
+   
+    AssertElementPresent(
+			key_rowAny = "Willames Ferreira",
+			key_rowEntry = "32",
+            key_text = "pt-br",
+			locator1 = "Icon#ANY_FORM");
+
+   }
+
+}
+
