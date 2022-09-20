@@ -1,0 +1,7 @@
+Caminhos:
+
+Clicar em Home : 
+ Click(locato1 = "//a[contains(text(),'Skip to Product Menu')]");
+
+Clicar em Content & data
+  Click(locator1 = "//a[contains(text(),'Content & Data')]");
